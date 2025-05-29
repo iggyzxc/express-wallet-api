@@ -18,7 +18,8 @@ export async function createTransaction(req, res) {
   try {
     const { user_id, title, amount, category } = req.body;
 
-    if (!title || !amount || !category || !user_id) {
+    // amount should be a number, so we can check if it's undefined or not
+    if (!title || !user_id || !category || amount === undefined) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
