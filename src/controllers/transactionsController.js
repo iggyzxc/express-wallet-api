@@ -68,12 +68,12 @@ export async function getSummaryByUserId(req, res) {
     `;
 
     const expenseResult = await sql`
-      SELECT COALESCE(SUM(amount), 0) AS expense FROM transactions WHERE user_id = ${userId} AND amount < 0
+      SELECT COALESCE(SUM(amount), 0) AS expenses FROM transactions WHERE user_id = ${userId} AND amount < 0
     `;
     res.status(200).json({
       balance: balanceResult[0].balance,
       income: incomeResult[0].income,
-      expense: expenseResult[0].expense,
+      expenses: expensesResult[0].expenses,
     }); // Return the summary of balance, income, and expense
   } catch (error) {
     console.error('Error getting the transaction summary:', error);
