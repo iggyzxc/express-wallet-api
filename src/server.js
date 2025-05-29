@@ -3,10 +3,14 @@ import dotenv from 'dotenv';
 import { initDB } from './config/db.js'; // Adjust the path as necessary
 import rateLimiter from './middleware/rateLimiter.js';
 import transactionsRoute from './routes/transactionsRoute.js';
+import { job } from './config/cron.js';
 
 dotenv.config();
 
 const app = express();
+
+// If the environment is production, start the cron job to send GET requests every 14 minutes
+if (process.env.NODE_ENV === 'prod') job.start();
 
 // Middleware to apply rate limiting
 app.use(rateLimiter);
@@ -16,8 +20,9 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5001;
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.send('Server is healthy and running!');
+  res.status(200).json({ status: 'OK' });
 });
 
 app.use('/api/transactions', transactionsRoute);
